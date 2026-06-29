@@ -1,0 +1,74 @@
+name: Bug Report
+description: Something is broken or behaving unexpectedly
+labels: ["bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please fill out as much detail as possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Clear description of the bug
+      placeholder: When I query X, the system returns Y instead of Z
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Exact steps to trigger the bug
+      placeholder: |
+        1. Ingest document X
+        2. POST /api/v1/chat with query "..."
+        3. Observe response
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      placeholder: The system should return...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Paste relevant log output (structlog lines from the API)
+      render: shell
+
+  - type: input
+    id: version
+    attributes:
+      label: MediRAG Pro version
+      placeholder: v0.1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which component is affected?
+      options:
+        - Ingestion pipeline
+        - Retrieval (dense/BM25/hybrid)
+        - Reranking
+        - LLM generation
+        - Emergency guardrails
+        - Semantic cache
+        - Session memory
+        - Evaluation framework
+        - Streamlit frontend
+        - FastAPI routes
+        - Docker/infrastructure
+        - Other
+    validations:
+      required: true

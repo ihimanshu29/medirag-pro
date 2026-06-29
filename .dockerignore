@@ -1,0 +1,67 @@
+# Version control
+.git
+.gitignore
+
+# CI/CD
+.github
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+
+# Test & quality artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Environment
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+
+# Data & models (large, rebuilt at runtime)
+data/*.pkl
+data/semantic_cache/
+data/bm25_index.pkl
+data/parent_chunks.pkl
+
+# Evaluation output (generated, not source)
+evaluation/results.json
+
+# Docs & media
+docs/screenshots/
+*.tar.gz
+*.zip
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets baseline
+.secrets.baseline
+
+# Deployment env files (contain secrets — never in images)
+.env.free
+.env.vps
+
+# Deployment docs
+docs/
+nginx/certs/
+
+# Alternative Dockerfiles (not needed inside the image)
+Dockerfile.spaces
+Dockerfile.frontend

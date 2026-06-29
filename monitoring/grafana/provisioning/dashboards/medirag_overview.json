@@ -1,0 +1,100 @@
+{
+  "title": "MediRAG Pro",
+  "uid": "medirag-overview",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Request Rate (req/min)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "targets": [{
+        "expr": "rate(medirag_requests_total[1m]) * 60",
+        "legendFormat": "{{endpoint}} {{status_code}}"
+      }]
+    },
+    {
+      "id": 2,
+      "title": "P50 / P95 / P99 Latency",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(medirag_request_latency_seconds_bucket{endpoint=\"/api/v1/chat\"}[5m])) * 1000",
+          "legendFormat": "P50 (ms)"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(medirag_request_latency_seconds_bucket{endpoint=\"/api/v1/chat\"}[5m])) * 1000",
+          "legendFormat": "P95 (ms)"
+        },
+        {
+          "expr": "histogram_quantile(0.99, rate(medirag_request_latency_seconds_bucket{endpoint=\"/api/v1/chat\"}[5m])) * 1000",
+          "legendFormat": "P99 (ms)"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Semantic Cache Hits (total)",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 8},
+      "targets": [{
+        "expr": "medirag_cache_hits_total",
+        "legendFormat": "Cache Hits"
+      }]
+    },
+    {
+      "id": 4,
+      "title": "Emergency Queries Detected",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {
+            "steps": [
+              {"color": "green", "value": 0},
+              {"color": "red", "value": 1}
+            ]
+          }
+        }
+      },
+      "targets": [{
+        "expr": "medirag_emergency_queries_total",
+        "legendFormat": "Emergency Queries"
+      }]
+    },
+    {
+      "id": 5,
+      "title": "Error Rate (%)",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 8},
+      "targets": [{
+        "expr": "rate(medirag_requests_total{status_code=~\"5..\"}[5m]) / rate(medirag_requests_total[5m]) * 100",
+        "legendFormat": "Error %"
+      }]
+    },
+    {
+      "id": 6,
+      "title": "Total Requests",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 8},
+      "targets": [{
+        "expr": "medirag_requests_total",
+        "legendFormat": "Total"
+      }]
+    },
+    {
+      "id": 7,
+      "title": "Request Volume by Endpoint",
+      "type": "barchart",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 12},
+      "targets": [{
+        "expr": "sum by (endpoint) (medirag_requests_total)",
+        "legendFormat": "{{endpoint}}"
+      }]
+    }
+  ]
+}

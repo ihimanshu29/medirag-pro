@@ -1,0 +1,52 @@
+version: "3.9"
+
+# Run alongside main docker-compose.yml:
+# docker compose -f docker-compose.yml -f docker-compose.monitoring.yml up -d
+#
+# Access:
+#   Prometheus:  http://localhost:9090
+#   Grafana:     http://localhost:3000  (admin / admin)
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: medirag_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - medirag_network
+
+  grafana:
+    image: grafana/grafana:11.3.1
+    container_name: medirag_grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - medirag_network
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  medirag_network:
+    external: true
+    name: medirag-pro_default

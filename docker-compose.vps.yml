@@ -1,0 +1,65 @@
+# VPS Deployment Override
+# Usage: docker compose -f docker-compose.yml -f docker-compose.vps.yml up -d
+#
+# What this adds over the base docker-compose.yml:
+#   - Nginx reverse proxy with HTTPS-ready config
+#   - Streamlit container (in the base, Streamlit runs separately)
+#   - Production environment flags
+#   - Restart policies
+#   - Resource limits
+
+version: "3.9"
+
+services:
+  qdrant:
+    restart: always
+
+  postgres:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_this_in_production}
+
+  api:
+    restart: always
+    environment:
+      APP_ENV: production
+      LOG_LEVEL: WARNING
+      QDRANT_HOST: qdrant
+      POSTGRES_HOST: postgres
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      API_BACKEND_URL: ${API_BACKEND_URL:-http://localhost:8000}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+
+  # Streamlit frontend as a Docker service (VPS only)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: medirag_frontend
+    ports:
+      - "8501:8501"
+    environment:
+      API_BACKEND_URL: ${API_BACKEND_URL:-http://api:8000}
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: always
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: medirag_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - api
+      - frontend
+    restart: always

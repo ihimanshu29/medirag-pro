@@ -1,0 +1,252 @@
+[
+  {
+    "question": "What is hypertension and how is it classified?",
+    "ground_truth": "Hypertension is persistently elevated blood pressure. It is classified as Stage 1 (130-139/80-89 mmHg) and Stage 2 (140+/90+ mmHg) according to ACC/AHA guidelines.",
+    "category": "cardiovascular"
+  },
+  {
+    "question": "What are the first-line medications for treating hypertension?",
+    "ground_truth": "First-line medications for hypertension include thiazide diuretics, ACE inhibitors, angiotensin receptor blockers (ARBs), and calcium channel blockers.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is diabetes mellitus type 2?",
+    "ground_truth": "Type 2 diabetes mellitus is a chronic metabolic disorder characterized by insulin resistance and relative insulin deficiency, leading to elevated blood glucose levels.",
+    "category": "endocrinology"
+  },
+  {
+    "question": "What are the diagnostic criteria for diabetes?",
+    "ground_truth": "Diabetes is diagnosed by fasting plasma glucose ≥126 mg/dL, 2-hour plasma glucose ≥200 mg/dL during OGTT, HbA1c ≥6.5%, or random plasma glucose ≥200 mg/dL with symptoms.",
+    "category": "diagnostics"
+  },
+  {
+    "question": "What is metformin used for?",
+    "ground_truth": "Metformin is a biguanide drug used as first-line pharmacological treatment for type 2 diabetes. It reduces hepatic glucose production and improves insulin sensitivity.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What are the symptoms of myocardial infarction?",
+    "ground_truth": "Symptoms of myocardial infarction include chest pain or pressure, pain radiating to the arm or jaw, shortness of breath, nausea, sweating, and lightheadedness.",
+    "category": "cardiovascular"
+  },
+  {
+    "question": "What is the mechanism of action of aspirin?",
+    "ground_truth": "Aspirin irreversibly inhibits cyclooxygenase (COX-1 and COX-2) enzymes, reducing the synthesis of prostaglandins and thromboxane A2, thereby producing anti-inflammatory, analgesic, antipyretic, and antiplatelet effects.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is asthma?",
+    "ground_truth": "Asthma is a chronic inflammatory disease of the airways characterized by reversible airflow obstruction, bronchial hyperresponsiveness, and underlying inflammation, leading to recurring episodes of wheezing, breathlessness, chest tightness, and coughing.",
+    "category": "pulmonology"
+  },
+  {
+    "question": "What medications are used to treat asthma?",
+    "ground_truth": "Asthma is treated with short-acting beta-agonists (SABAs) like salbutamol for acute relief, and long-term controllers including inhaled corticosteroids (ICS), long-acting beta-agonists (LABAs), leukotriene receptor antagonists, and biologics for severe cases.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is chronic obstructive pulmonary disease (COPD)?",
+    "ground_truth": "COPD is a chronic inflammatory lung disease causing obstructed airflow, primarily caused by long-term exposure to irritating gases or particulates, most often cigarette smoke. It includes chronic bronchitis and emphysema.",
+    "category": "pulmonology"
+  },
+  {
+    "question": "What is atrial fibrillation?",
+    "ground_truth": "Atrial fibrillation (AFib) is an irregular, often rapid heart rate where the atria beat chaotically and out of coordination with the ventricles, increasing risk of stroke, heart failure, and other complications.",
+    "category": "cardiovascular"
+  },
+  {
+    "question": "What is the CHA2DS2-VASc score used for?",
+    "ground_truth": "The CHA2DS2-VASc score is used to assess stroke risk in patients with atrial fibrillation to guide anticoagulation therapy decisions.",
+    "category": "cardiovascular"
+  },
+  {
+    "question": "What are ACE inhibitors and what are their side effects?",
+    "ground_truth": "ACE inhibitors block the angiotensin-converting enzyme, reducing angiotensin II production, causing vasodilation and lower blood pressure. Common side effects include a dry cough, hyperkalemia, and rarely angioedema.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is heart failure?",
+    "ground_truth": "Heart failure is a condition where the heart cannot pump enough blood to meet the body's needs. It is classified as heart failure with reduced ejection fraction (HFrEF) or preserved ejection fraction (HFpEF).",
+    "category": "cardiovascular"
+  },
+  {
+    "question": "What is the difference between Type 1 and Type 2 diabetes?",
+    "ground_truth": "Type 1 diabetes is an autoimmune condition causing destruction of pancreatic beta cells with absolute insulin deficiency. Type 2 diabetes involves insulin resistance and relative insulin deficiency, typically in adults with metabolic risk factors.",
+    "category": "endocrinology"
+  },
+  {
+    "question": "What is hypothyroidism?",
+    "ground_truth": "Hypothyroidism is a condition where the thyroid gland does not produce sufficient thyroid hormone, leading to symptoms like fatigue, weight gain, cold intolerance, constipation, and depression.",
+    "category": "endocrinology"
+  },
+  {
+    "question": "How is hypothyroidism treated?",
+    "ground_truth": "Hypothyroidism is treated with levothyroxine, a synthetic form of the thyroid hormone T4, taken orally once daily. Doses are adjusted based on TSH levels.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is pneumonia?",
+    "ground_truth": "Pneumonia is an infection that inflames the air sacs in one or both lungs, which may fill with fluid or pus, causing cough with phlegm, fever, chills, and difficulty breathing.",
+    "category": "pulmonology"
+  },
+  {
+    "question": "What antibiotics are used to treat community-acquired pneumonia?",
+    "ground_truth": "Community-acquired pneumonia (CAP) is typically treated with amoxicillin for mild cases, or a macrolide (azithromycin) or doxycycline as alternatives. Severe cases may require a beta-lactam plus macrolide, or a respiratory fluoroquinolone.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is osteoporosis?",
+    "ground_truth": "Osteoporosis is a metabolic bone disease characterized by reduced bone density and deterioration of bone microarchitecture, increasing susceptibility to fractures, particularly of the spine, hip, and wrist.",
+    "category": "musculoskeletal"
+  },
+  {
+    "question": "What is rheumatoid arthritis?",
+    "ground_truth": "Rheumatoid arthritis is a chronic autoimmune inflammatory disorder that primarily affects joints, causing painful swelling, joint damage, and systemic manifestations. It is characterized by symmetric joint involvement.",
+    "category": "musculoskeletal"
+  },
+  {
+    "question": "What is the role of statins in cardiovascular disease?",
+    "ground_truth": "Statins inhibit HMG-CoA reductase, reducing cholesterol synthesis in the liver. They lower LDL cholesterol, reduce cardiovascular events, and stabilize atherosclerotic plaques in patients at cardiovascular risk.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is a stroke and what are its types?",
+    "ground_truth": "A stroke occurs when blood supply to part of the brain is cut off. Ischemic strokes (87%) are caused by blockages; hemorrhagic strokes are caused by bleeding. TIA is a transient episode with no permanent damage.",
+    "category": "neurology"
+  },
+  {
+    "question": "What is the FAST acronym for stroke recognition?",
+    "ground_truth": "FAST stands for Face drooping, Arm weakness, Speech difficulty, and Time to call emergency services — a mnemonic for recognizing stroke symptoms and acting quickly.",
+    "category": "neurology"
+  },
+  {
+    "question": "What is depression and how is it diagnosed?",
+    "ground_truth": "Depression is a mood disorder characterized by persistent low mood, anhedonia, and associated symptoms lasting at least two weeks, significantly impairing functioning. Diagnosis uses DSM-5 criteria requiring 5+ symptoms including depressed mood or anhedonia.",
+    "category": "psychiatry"
+  },
+  {
+    "question": "What are SSRIs and what are they used for?",
+    "ground_truth": "Selective serotonin reuptake inhibitors (SSRIs) block reuptake of serotonin in the synapse, increasing serotonin availability. They are first-line treatment for depression, anxiety disorders, OCD, and PTSD.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is chronic kidney disease (CKD)?",
+    "ground_truth": "CKD is a progressive loss of kidney function over months or years, defined as GFR <60 mL/min/1.73m² or markers of kidney damage for >3 months. It is staged 1-5 based on GFR.",
+    "category": "nephrology"
+  },
+  {
+    "question": "What are the causes of acute kidney injury?",
+    "ground_truth": "AKI causes are classified as prerenal (reduced perfusion: dehydration, heart failure), intrinsic renal (glomerulonephritis, ATN from ischemia or nephrotoxins), and postrenal (obstruction: stones, BPH).",
+    "category": "nephrology"
+  },
+  {
+    "question": "What is sepsis?",
+    "ground_truth": "Sepsis is a life-threatening organ dysfunction caused by a dysregulated host response to infection, defined by an increase of ≥2 SOFA score points. Septic shock involves vasopressor requirement and lactate >2 mmol/L.",
+    "category": "critical_care"
+  },
+  {
+    "question": "What is the Surviving Sepsis Campaign bundle?",
+    "ground_truth": "The Surviving Sepsis Campaign 1-hour bundle includes measuring lactate, obtaining blood cultures before antibiotics, administering broad-spectrum antibiotics, giving 30 mL/kg IV crystalloid for hypotension, and applying vasopressors if MAP <65 mmHg.",
+    "category": "critical_care"
+  },
+  {
+    "question": "What is anemia and how is it classified?",
+    "ground_truth": "Anemia is a reduction in red blood cell count or hemoglobin concentration below normal. It is classified by morphology (microcytic, normocytic, macrocytic) and by etiology (iron deficiency, B12/folate deficiency, hemolysis, chronic disease).",
+    "category": "hematology"
+  },
+  {
+    "question": "What are the symptoms of iron deficiency anemia?",
+    "ground_truth": "Symptoms include fatigue, pallor, dyspnea on exertion, palpitations, headache, and pica (craving non-food items). Signs include koilonychia (spoon nails) and angular cheilitis.",
+    "category": "hematology"
+  },
+  {
+    "question": "What is the mechanism of warfarin?",
+    "ground_truth": "Warfarin inhibits vitamin K epoxide reductase, blocking regeneration of reduced vitamin K needed to activate clotting factors II, VII, IX, and X. Its effect is monitored by INR.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What are direct oral anticoagulants (DOACs)?",
+    "ground_truth": "DOACs include direct thrombin inhibitors (dabigatran) and direct factor Xa inhibitors (rivaroxaban, apixaban, edoxaban). They offer predictable pharmacokinetics and do not require routine INR monitoring.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is epilepsy?",
+    "ground_truth": "Epilepsy is a neurological disorder characterized by recurrent unprovoked seizures due to abnormal excessive or synchronous neuronal activity in the brain, requiring at least two unprovoked seizures or one seizure with high recurrence risk.",
+    "category": "neurology"
+  },
+  {
+    "question": "What is the treatment for status epilepticus?",
+    "ground_truth": "Status epilepticus is treated with benzodiazepines (lorazepam IV) as first-line, followed by phenytoin or valproate if seizures continue, then anaesthetic doses of propofol or midazolam for refractory cases.",
+    "category": "neurology"
+  },
+  {
+    "question": "What is Alzheimer's disease?",
+    "ground_truth": "Alzheimer's disease is a progressive neurodegenerative disorder and the most common cause of dementia, characterized by amyloid plaques and neurofibrillary tau tangles, causing progressive memory loss and cognitive decline.",
+    "category": "neurology"
+  },
+  {
+    "question": "What is Parkinson's disease?",
+    "ground_truth": "Parkinson's disease is a progressive neurodegenerative disorder caused by dopaminergic neuron loss in the substantia nigra, presenting with resting tremor, rigidity, bradykinesia, and postural instability.",
+    "category": "neurology"
+  },
+  {
+    "question": "How is Parkinson's disease treated?",
+    "ground_truth": "Parkinson's disease is primarily treated with levodopa combined with carbidopa (to reduce peripheral conversion). Other agents include dopamine agonists, MAO-B inhibitors, and COMT inhibitors.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is peptic ulcer disease?",
+    "ground_truth": "Peptic ulcer disease involves mucosal breaks in the stomach or duodenum caused by H. pylori infection, NSAID use, or acid hypersecretion, disrupting the balance between mucosal protective factors and acid.",
+    "category": "gastroenterology"
+  },
+  {
+    "question": "What is the treatment for H. pylori eradication?",
+    "ground_truth": "Standard triple therapy for H. pylori includes a proton pump inhibitor (PPI) plus clarithromycin plus amoxicillin for 14 days. Quadruple therapy (PPI + bismuth + metronidazole + tetracycline) is used where clarithromycin resistance is high.",
+    "category": "gastroenterology"
+  },
+  {
+    "question": "What is inflammatory bowel disease?",
+    "ground_truth": "Inflammatory bowel disease (IBD) includes Crohn's disease and ulcerative colitis. Crohn's can affect any part of the GI tract with transmural inflammation; UC affects only the colon with mucosal inflammation.",
+    "category": "gastroenterology"
+  },
+  {
+    "question": "What are proton pump inhibitors (PPIs) and how do they work?",
+    "ground_truth": "PPIs irreversibly inhibit the H+/K+ ATPase pump (proton pump) in gastric parietal cells, blocking the final step of acid secretion. They are used for GERD, peptic ulcers, and H. pylori eradication.",
+    "category": "pharmacology"
+  },
+  {
+    "question": "What is hepatitis B?",
+    "ground_truth": "Hepatitis B is a viral infection caused by the Hepatitis B virus (HBV) that attacks the liver, causing acute and chronic disease. It is transmitted through blood, sexual contact, and perinatally.",
+    "category": "infectious_disease"
+  },
+  {
+    "question": "What is the difference between HDL and LDL cholesterol?",
+    "ground_truth": "LDL (low-density lipoprotein) transports cholesterol from liver to tissues and high levels are associated with atherosclerosis. HDL (high-density lipoprotein) carries cholesterol back to the liver for excretion and is cardioprotective.",
+    "category": "cardiovascular"
+  },
+  {
+    "question": "What is the normal range for fasting blood glucose?",
+    "ground_truth": "Normal fasting blood glucose is 70-99 mg/dL (3.9-5.5 mmol/L). Impaired fasting glucose (prediabetes) is 100-125 mg/dL, and diabetes is diagnosed at ≥126 mg/dL.",
+    "category": "diagnostics"
+  },
+  {
+    "question": "What causes hyponatremia?",
+    "ground_truth": "Hyponatremia (serum sodium <135 mEq/L) is caused by excess free water relative to sodium. Causes include SIADH, heart failure, cirrhosis, hypothyroidism, diuretic use, and excessive water intake.",
+    "category": "nephrology"
+  },
+  {
+    "question": "What is pulmonary embolism?",
+    "ground_truth": "Pulmonary embolism (PE) is a blockage of a pulmonary artery, usually by a blood clot from deep vein thrombosis, causing ventilation-perfusion mismatch, hypoxia, and potentially haemodynamic compromise.",
+    "category": "pulmonology"
+  },
+  {
+    "question": "What is the Wells score used for?",
+    "ground_truth": "The Wells score is a clinical prediction rule used to estimate the pre-test probability of deep vein thrombosis (DVT) or pulmonary embolism (PE) to guide diagnostic workup.",
+    "category": "diagnostics"
+  },
+  {
+    "question": "What is anaphylaxis and how is it treated?",
+    "ground_truth": "Anaphylaxis is a severe, life-threatening systemic allergic reaction. First-line treatment is intramuscular epinephrine (adrenaline) 0.3-0.5 mg in adults into the lateral thigh, along with airway management, IV fluids, and antihistamines.",
+    "category": "emergency"
+  }
+]
