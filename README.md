@@ -1,3 +1,15 @@
+---
+title: Medirag Pro
+emoji: 😻
+colorFrom: indigo
+colorTo: indigo
+sdk: docker
+pinned: false
+license: mit
+---
+
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+
 # MediRAG Pro 🩺
 
 > Production-grade Medical RAG system with hybrid retrieval, cross-encoder reranking, safety guardrails, and LLM-as-judge evaluation.
@@ -80,26 +92,27 @@ User Query
 Evaluated on 50-question medical golden test set across 10 clinical categories.
 LLM-as-judge methodology using Groq Llama 3.3 70B as evaluator.
 
-| Metric | Score | Description |
-|---|---|---|
-| **Faithfulness** | **0.87** | Fraction of answer claims supported by retrieved context |
-| **Answer Relevance** | **0.84** | How directly the answer addresses the question |
-| **Context Recall** | **0.81** | Whether retrieved context contains the ground truth information |
-| **Context Precision** | **0.79** | Fraction of retrieved context that is actually useful |
+| Metric                | Score    | Description                                                     |
+| --------------------- | -------- | --------------------------------------------------------------- |
+| **Faithfulness**      | **0.87** | Fraction of answer claims supported by retrieved context        |
+| **Answer Relevance**  | **0.84** | How directly the answer addresses the question                  |
+| **Context Recall**    | **0.81** | Whether retrieved context contains the ground truth information |
+| **Context Precision** | **0.79** | Fraction of retrieved context that is actually useful           |
 
 **Retrieval ablation (Recall@5 on 50-question set):**
 
-| Strategy | Recall@5 |
-|---|---|
-| Dense only (BGE) | 0.71 |
-| BM25 only | 0.64 |
+| Strategy                        | Recall@5 |
+| ------------------------------- | -------- |
+| Dense only (BGE)                | 0.71     |
+| BM25 only                       | 0.64     |
 | **Hybrid + RRF (this project)** | **0.83** |
-| Hybrid + RRF + Reranking | **0.89** |
+| Hybrid + RRF + Reranking        | **0.89** |
 
 Hybrid retrieval improved Recall@5 by **17%** vs dense-only.
 Reranking further improved precision — noisy chunks no longer reach the LLM.
 
 To reproduce:
+
 ```bash
 python -m src.evaluation.ragas_eval \
   --test-set evaluation/golden_test_set.json \
@@ -111,31 +124,32 @@ python -m src.evaluation.ragas_eval \
 
 ## Tech Stack
 
-| Layer | Technology | Reason |
-|---|---|---|
-| Embeddings | `BAAI/bge-small-en-v1.5` | Top MTEB retrieval score at 384-dim, outperforms all-MiniLM |
-| Vector Store | Qdrant | Filterable, mutable, no dangerous deserialization |
-| Sparse Retrieval | `rank_bm25` (BM25Okapi) | Exact keyword match for drug names and ICD codes |
-| Reranker | `BAAI/bge-reranker-base` | Cross-encoder: full query-document attention at rerank time |
-| LLM | Groq Llama 3.3 70B | Fastest inference available; free tier |
-| PDF Loading | `pymupdf4llm` + `pdfplumber` | Markdown-preserving text + table structure extraction |
-| Chunking | Parent-child (custom) | Small child for precision, large parent for LLM context |
-| Caching | `diskcache` + cosine sim | Semantic cache: same question, different wording → cache hit |
-| Memory | PostgreSQL | Persistent session history, survives restarts |
-| API | FastAPI + Uvicorn | Production ASGI server, not Streamlit |
-| Frontend | Streamlit | Demo-ready UI with citations and feedback |
-| Logging | `structlog` | Structured JSON in production, colored console in dev |
-| Config | `pydantic-settings` | Type-safe, `.env`-backed, cached singleton |
-| Monitoring | Prometheus (`/metrics`) | Request count, latency histograms, cache hits, emergency counts |
-| Testing | pytest + httpx | 82 tests across all components |
-| CI | GitHub Actions | Lint (ruff) + type check (mypy) + tests on every push |
-| Containers | Docker + docker-compose | Qdrant + PostgreSQL + API in one command |
+| Layer            | Technology                   | Reason                                                          |
+| ---------------- | ---------------------------- | --------------------------------------------------------------- |
+| Embeddings       | `BAAI/bge-small-en-v1.5`     | Top MTEB retrieval score at 384-dim, outperforms all-MiniLM     |
+| Vector Store     | Qdrant                       | Filterable, mutable, no dangerous deserialization               |
+| Sparse Retrieval | `rank_bm25` (BM25Okapi)      | Exact keyword match for drug names and ICD codes                |
+| Reranker         | `BAAI/bge-reranker-base`     | Cross-encoder: full query-document attention at rerank time     |
+| LLM              | Groq Llama 3.3 70B           | Fastest inference available; free tier                          |
+| PDF Loading      | `pymupdf4llm` + `pdfplumber` | Markdown-preserving text + table structure extraction           |
+| Chunking         | Parent-child (custom)        | Small child for precision, large parent for LLM context         |
+| Caching          | `diskcache` + cosine sim     | Semantic cache: same question, different wording → cache hit    |
+| Memory           | PostgreSQL                   | Persistent session history, survives restarts                   |
+| API              | FastAPI + Uvicorn            | Production ASGI server, not Streamlit                           |
+| Frontend         | Streamlit                    | Demo-ready UI with citations and feedback                       |
+| Logging          | `structlog`                  | Structured JSON in production, colored console in dev           |
+| Config           | `pydantic-settings`          | Type-safe, `.env`-backed, cached singleton                      |
+| Monitoring       | Prometheus (`/metrics`)      | Request count, latency histograms, cache hits, emergency counts |
+| Testing          | pytest + httpx               | 82 tests across all components                                  |
+| CI               | GitHub Actions               | Lint (ruff) + type check (mypy) + tests on every push           |
+| Containers       | Docker + docker-compose      | Qdrant + PostgreSQL + API in one command                        |
 
 ---
 
 ## Quick Start
 
 ### Prerequisites
+
 - Docker + Docker Compose
 - Python 3.11+
 - [Groq API key](https://console.groq.com) (free)
@@ -258,18 +272,23 @@ medirag-pro/
 ## Key Design Decisions
 
 ### Why parent-child chunking?
+
 Small child chunks (256 tokens) are embedded for precise retrieval — less semantic noise per vector. At retrieval time, we expand to the parent chunk (1024 tokens) before reranking and generation. This gives the LLM full context without degrading retrieval precision.
 
 ### Why RRF over weighted fusion?
+
 Dense scores (cosine, 0–1) and BM25 scores (unbounded, can be negative) are not directly comparable. Weighted sum requires per-dataset tuning. RRF uses only rank positions — parameter-free and robust. It consistently matches or beats tuned fusion on BEIR benchmarks.
 
 ### Why two PDF libraries?
+
 `pymupdf4llm` produces the best text quality (layout-aware Markdown). `pdfplumber` has the best table detection. Medical documents have critical information in tables (drug dosages, lab ranges). We run both and merge table output into the text.
 
 ### Why pre-retrieval emergency detection?
+
 If someone types "I took 40 Tylenol tablets", the RAG pipeline must not run at all. Retrieving acetaminophen overdose information and answering factually is the worst possible response. Detection runs before any vector search, returns a hardcoded safe response — never LLM-generated for emergencies.
 
 ### Why BGE over all-MiniLM?
+
 `all-MiniLM-L6-v2` was trained on general web text. Medical terminology, drug names, and clinical abbreviations are poorly represented. `BAAI/bge-small-en-v1.5` ranks higher on MTEB retrieval benchmarks and produces meaningfully better recall on domain-specific text. The retrieval ablation above shows a measurable difference.
 
 ---
@@ -277,6 +296,7 @@ If someone types "I took 40 Tylenol tablets", the RAG pipeline must not run at a
 ## API Reference
 
 ### `POST /api/v1/chat`
+
 ```json
 // Request
 {
@@ -307,27 +327,31 @@ If someone types "I took 40 Tylenol tablets", the RAG pipeline must not run at a
 ```
 
 ### `POST /api/v1/ingest`
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/ingest \
   -F "file=@medical_document.pdf"
 ```
 
 ### `GET /health`
+
 ```json
 {
   "status": "healthy",
   "components": {
-    "qdrant": {"status": "healthy", "collections": 1},
-    "postgres": {"status": "healthy"},
+    "qdrant": { "status": "healthy", "collections": 1 },
+    "postgres": { "status": "healthy" },
     "latency_ms": 12.4
   }
 }
 ```
 
 ### `GET /metrics`
+
 Prometheus exposition format. Scrape with Prometheus, visualise with Grafana.
 
 Key metrics:
+
 - `medirag_requests_total` — request count by endpoint + status code
 - `medirag_request_latency_seconds` — latency histogram
 - `medirag_cache_hits_total` — semantic cache hits
@@ -354,14 +378,14 @@ pytest tests/ --cov=src --cov-report=html
 
 At 10,000 queries/day with ~40% semantic cache hit rate:
 
-| Component | Cost/day |
-|---|---|
-| Groq Llama 3.3 70B | ~$0 (free tier up to limits) |
-| BGE embeddings | $0 (local CPU) |
-| BGE Reranker | $0 (local CPU) |
-| Qdrant (self-hosted) | $0 (Docker) |
-| PostgreSQL (self-hosted) | $0 (Docker) |
-| **Total** | **~$0 at portfolio scale** |
+| Component                | Cost/day                     |
+| ------------------------ | ---------------------------- |
+| Groq Llama 3.3 70B       | ~$0 (free tier up to limits) |
+| BGE embeddings           | $0 (local CPU)               |
+| BGE Reranker             | $0 (local CPU)               |
+| Qdrant (self-hosted)     | $0 (Docker)                  |
+| PostgreSQL (self-hosted) | $0 (Docker)                  |
+| **Total**                | **~$0 at portfolio scale**   |
 
 At production scale (1M queries/day), primary cost is LLM tokens.
 Semantic cache reduces LLM calls by ~40%, cutting costs proportionally.
