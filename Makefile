@@ -2,7 +2,7 @@
         docker-up docker-down docker-build \
         run-api run-ui ingest eval benchmark clean help
 
-# ── Setup ─────────────────────────────────────────────────────────────────────
+# ----Setup ---------------------------------------------------------------
 
 install:  ## Install all dependencies and pre-commit hooks
 	pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
@@ -10,7 +10,7 @@ install:  ## Install all dependencies and pre-commit hooks
 	pre-commit install
 	@echo "✅ Installation complete. Copy .env.example to .env and add your GROQ_API_KEY."
 
-# ── Code Quality ──────────────────────────────────────────────────────────────
+# ----Code Quality ---------------------------------------------------------------
 
 lint:  ## Run ruff linter
 	ruff check src/ tests/
@@ -27,7 +27,7 @@ typecheck:  ## Run mypy type checker
 check: lint format-check typecheck  ## Run all quality checks (no modification)
 	@echo "✅ All quality checks passed."
 
-# ── Testing ───────────────────────────────────────────────────────────────────
+# ---- Testing ---------------------------------------------------------------
 
 test:  ## Run all tests with coverage
 	GROQ_API_KEY=test-key pytest tests/ \
@@ -51,7 +51,7 @@ test-phase3:  ## Run Phase 3 tests only
 test-phase4:  ## Run Phase 4 tests only
 	GROQ_API_KEY=test-key pytest tests/test_phase4.py -v
 
-# ── Infrastructure ────────────────────────────────────────────────────────────
+# ---- Infrastructure ---------------------------------------------------------------
 
 docker-up:  ## Start Qdrant and PostgreSQL
 	docker compose up qdrant postgres -d
@@ -71,7 +71,7 @@ docker-build:  ## Build the API Docker image
 docker-logs:  ## Tail API logs
 	docker compose logs api -f
 
-# ── Running ───────────────────────────────────────────────────────────────────
+# ---- Running ---------------------------------------------------------------
 
 run-api:  ## Start FastAPI development server
 	uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
@@ -79,14 +79,14 @@ run-api:  ## Start FastAPI development server
 run-ui:  ## Start Streamlit frontend
 	streamlit run frontend/app.py
 
-# ── Data Operations ───────────────────────────────────────────────────────────
+# ---- Data Operations ---------------------------------------------------------------
 
 ingest:  ## Ingest a PDF — usage: make ingest FILE=data/your_doc.pdf
 	@test -n "$(FILE)" || (echo "Usage: make ingest FILE=path/to/doc.pdf" && exit 1)
 	curl -X POST http://localhost:8000/api/v1/ingest \
 		-F "file=@$(FILE)" | python -m json.tool
 
-# ── Evaluation ────────────────────────────────────────────────────────────────
+# ---- Evaluation ---------------------------------------------------------------
 
 eval:  ## Run RAG evaluation (20 samples)
 	python -m src.evaluation.ragas_eval \
@@ -103,7 +103,7 @@ eval-full:  ## Run full 50-sample evaluation
 benchmark:  ## Run latency benchmark (requires running API)
 	python scripts/benchmark.py --url http://localhost:8000 --users 10 --requests 50
 
-# ── Cleanup ───────────────────────────────────────────────────────────────────
+# ---- Cleanup ---------------------------------------------------------------
 
 clean:  ## Remove all generated artifacts
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null; true
@@ -116,7 +116,7 @@ clean-data:  ## Remove ingested data (BM25 index, parent chunks, cache)
 	rm -rf data/semantic_cache/
 	@echo "⚠️  Data cleaned. You will need to re-ingest documents."
 
-# ── Help ─────────────────────────────────────────────────────────────────────
+# ---- Help ---------------------------------------------------------------
 
 help:  ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \

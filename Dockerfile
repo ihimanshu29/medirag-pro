@@ -1,4 +1,4 @@
-# ════════════════════════════════════════════════════════════════════
+# ===============================================================
 # MediRAG Pro — HuggingFace Spaces Dockerfile
 #
 # HF Spaces constraints:
@@ -17,7 +17,7 @@
 #   1. Create HF Space: huggingface.co/new-space → SDK: Docker
 #   2. Set all secrets in Space Settings → Repository secrets
 #   3. Push this file as Dockerfile to the Space repo
-# ════════════════════════════════════════════════════════════════════
+# ===============================================================
 
 FROM python:3.11-slim
 

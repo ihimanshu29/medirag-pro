@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  # ── Vector Store ──────────────────────────────────────────────
+  # Vector Store
   qdrant:
     image: qdrant/qdrant:v1.12.4
     container_name: medirag_qdrant
@@ -19,7 +19,7 @@ services:
       retries: 5
     restart: unless-stopped
 
-  # ── Relational DB (session memory + metadata) ─────────────────
+  # Relational DB (session memory + metadata)
   postgres:
     image: postgres:16-alpine
     container_name: medirag_postgres
@@ -39,7 +39,7 @@ services:
       retries: 5
     restart: unless-stopped
 
-  # ── MediRAG API ───────────────────────────────────────────────
+  # MediRAG API
   api:
     build:
       context: .
