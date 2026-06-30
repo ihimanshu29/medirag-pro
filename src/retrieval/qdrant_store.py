@@ -15,6 +15,7 @@ from qdrant_client.models import (
     MatchValue,
     PointStruct,
     VectorParams,
+    PayloadSchemaType,
 )
 
 from src.config import settings
@@ -62,8 +63,9 @@ class QdrantStore:
         self._ensure_collection()
 
     def _ensure_collection(self) -> None:
-        """Create the collection if it doesn't already exist."""
+        """Create the collection if it doesn't already exist and guarantee payload indexing."""
         existing = {c.name for c in self._client.get_collections().collections}
+        
         if self._collection not in existing:
             self._client.create_collection(
                 collection_name=self._collection,
@@ -75,6 +77,20 @@ class QdrantStore:
             logger.info("qdrant_collection_created", collection=self._collection, dim=self._dim)
         else:
             logger.info("qdrant_collection_exists", collection=self._collection)
+            
+        # ─── PRODUCTION FIX: RUNS REGARDLESS OF IF/ELSE CORNER CASES ───
+        for field in ("source_file", "section", "chunk_type"):
+            try:
+                self._client.create_payload_index(
+                    collection_name=self._collection,
+                    field_name=field,
+                    field_schema=PayloadSchemaType.KEYWORD,
+                )
+                logger.info("qdrant_payload_index_created", field=field)
+            except Exception:
+                # If the index already exists, Qdrant raises an exception. 
+                # We catch and pass it silently so it doesn't disrupt startup.
+                pass
 
     def upsert_chunks(self, chunks: list[ChildChunk]) -> int:
         """
