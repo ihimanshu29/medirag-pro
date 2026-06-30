@@ -3,9 +3,7 @@ Phase 2 tests: ingestion pipeline components.
 All tests run without external services (Qdrant/Postgres mocked where needed).
 """
 import os
-import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -98,8 +96,8 @@ def test_chunker_deterministic_ids():
 
 
 def test_chunker_with_table():
-    from src.models import RawPage
     from src.ingestion.chunker import chunk_pages
+    from src.models import RawPage
     page = RawPage(
         page_num=1,
         text="Drug dosage information follows.",
@@ -217,7 +215,6 @@ def test_parent_store_missing_key(tmp_path, monkeypatch):
 
 def test_embedder_cosine_similarity():
     """Test cosine similarity math without loading the model."""
-    import numpy as np
     from src.retrieval.embedder import Embedder
 
     emb = Embedder()

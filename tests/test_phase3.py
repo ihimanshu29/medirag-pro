@@ -163,7 +163,7 @@ def test_safety_passes_normal_query():
 
 
 def test_safety_truncates_long_query():
-    from src.guardrails.safety import sanitize_query, MAX_EFFECTIVE_QUERY_LENGTH
+    from src.guardrails.safety import MAX_EFFECTIVE_QUERY_LENGTH, sanitize_query
     long_query = "What is hypertension? " * 200
     is_safe, cleaned = sanitize_query(long_query)
     assert is_safe is True
@@ -215,7 +215,7 @@ def test_generate_answer_no_chunks():
 
 
 def test_generate_answer_returns_disclaimer():
-    from src.generation.llm import generate_answer, MEDICAL_DISCLAIMER
+    from src.generation.llm import MEDICAL_DISCLAIMER, generate_answer
 
     mock_response = MagicMock()
     mock_response.choices[0].message.content = "Aspirin is an anti-inflammatory drug."
@@ -224,8 +224,8 @@ def test_generate_answer_returns_disclaimer():
 
     chunk = make_chunk("c1", "Aspirin reduces inflammation by inhibiting COX enzymes.", 0.9)
 
-    with patch("src.generation.llm.Groq") as MockGroq:
-        MockGroq.return_value.chat.completions.create.return_value = mock_response
+    with patch("src.generation.llm.Groq") as mock_groq:
+        mock_groq.return_value.chat.completions.create.return_value = mock_response
         answer, confidence = generate_answer("What is aspirin?", [chunk])
 
     assert MEDICAL_DISCLAIMER in answer
@@ -233,8 +233,9 @@ def test_generate_answer_returns_disclaimer():
 
 
 def test_generate_answer_retries_on_timeout():
-    from src.generation.llm import generate_answer
     from groq import APITimeoutError
+
+    from src.generation.llm import generate_answer
 
     chunk = make_chunk("c1", "Aspirin text", 0.8)
 
@@ -243,8 +244,8 @@ def test_generate_answer_retries_on_timeout():
     mock_response.usage.prompt_tokens = 50
     mock_response.usage.completion_tokens = 20
 
-    with patch("src.generation.llm.Groq") as MockGroq:
-        instance = MockGroq.return_value
+    with patch("src.generation.llm.Groq") as mock_groq:
+        instance = mock_groq.return_value
         # Fail twice, succeed on third attempt
         instance.chat.completions.create.side_effect = [
             APITimeoutError("timeout"),
@@ -259,13 +260,14 @@ def test_generate_answer_retries_on_timeout():
 
 
 def test_generate_answer_fallback_after_all_retries():
-    from src.generation.llm import generate_answer
     from groq import APITimeoutError
+
+    from src.generation.llm import generate_answer
 
     chunk = make_chunk("c1", "some text", 0.8)
 
-    with patch("src.generation.llm.Groq") as MockGroq:
-        MockGroq.return_value.chat.completions.create.side_effect = APITimeoutError("timeout")
+    with patch("src.generation.llm.Groq") as mock_groq:
+        mock_groq.return_value.chat.completions.create.side_effect = APITimeoutError("timeout")
         with patch("src.generation.llm.time.sleep"):
             answer, confidence = generate_answer("query", [chunk], max_retries=3)
 

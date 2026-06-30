@@ -122,13 +122,13 @@ class BM25Store:
         before = len(self._corpus_tokens)
         combined = [
             (tokens, meta)
-            for tokens, meta in zip(self._corpus_tokens, self._metadata)
+            for tokens, meta in zip(self._corpus_tokens, self._metadata, strict=False)
             if meta["source_file"] != source_file
         ]
         if not combined:
             self._reset()
         else:
-            self._corpus_tokens, self._metadata = map(list, zip(*combined))
+            self._corpus_tokens, self._metadata = map(list, zip(*combined, strict=False))
             self._bm25 = BM25Okapi(self._corpus_tokens)
 
         self._save_to_disk()
@@ -155,7 +155,7 @@ class BM25Store:
 
         # Pair scores with metadata
         scored = sorted(
-            zip(raw_scores, self._metadata),
+            zip(raw_scores, self._metadata, strict=False),
             key=lambda x: x[0],
             reverse=True,
         )

@@ -4,7 +4,7 @@ Accepts a user query, runs the full RAG pipeline, returns a cited answer.
 """
 import time
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request
 
 from src.api.limiter import limiter
 from src.api.schemas import ChatRequest, ChatResponse

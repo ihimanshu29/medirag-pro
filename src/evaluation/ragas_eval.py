@@ -36,7 +36,8 @@ logger = get_logger(__name__)
 
 def _call_judge(prompt: str, max_retries: int = 2) -> str:
     """Call Groq LLM as an evaluation judge. Returns the raw response text."""
-    from groq import Groq, APITimeoutError
+    from groq import APITimeoutError, Groq
+
     from src.config import settings
 
     client = Groq(api_key=settings.groq_api_key)
@@ -249,6 +250,7 @@ def run_evaluation(
         dict with aggregate metrics and per-sample results
     """
     import asyncio
+
     from src.pipeline.query_pipeline import QueryPipeline
 
     setup_logging()

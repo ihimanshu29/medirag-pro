@@ -18,8 +18,6 @@ Chunking approach:
 """
 import hashlib
 import re
-import uuid
-from dataclasses import dataclass
 
 from src.config import settings
 from src.logging_config import get_logger
@@ -90,7 +88,7 @@ def _build_parent_chunks(pages: list[RawPage], source_file: str) -> list[ParentC
 
         # Add page text
         page_text = page.text
-        page_tokens = _count_tokens_approx(page_text)
+        _count_tokens_approx(page_text)
 
         # Add tables inline after their page text
         table_text = ""
@@ -156,7 +154,6 @@ def _build_child_chunks(parent: ParentChunk) -> list[ChildChunk]:
         if sentence.startswith("|") and "---" in sentence:
             flush_child()
             # Collect the whole table block
-            table_lines = [sentence]
             buffer.clear()
             buffer_tokens = 0
             # We'll just emit this sentence as a table child

@@ -56,8 +56,8 @@ def test_chat_valid_request(client):
         "cache_hit": False,
         "is_emergency": False,
     }
-    with patch("src.pipeline.query_pipeline.QueryPipeline") as MockPipeline:
-        MockPipeline.return_value.run = AsyncMock(return_value=mock_result)
+    with patch("src.pipeline.query_pipeline.QueryPipeline") as mock_pipeline:
+        mock_pipeline.return_value.run = AsyncMock(return_value=mock_result)
         response = client.post("/api/v1/chat", json={"query": "What is hypertension?"})
 
     assert response.status_code == 200

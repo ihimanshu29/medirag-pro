@@ -1,64 +1,41 @@
-# ===============================================================
-# MediRAG Pro — HuggingFace Spaces Dockerfile
-#
-# HF Spaces constraints:
-#   - Exposes exactly ONE port (7860)
-#   - No docker-compose (single container only)
-#   - External services required: Qdrant Cloud + Neon PostgreSQL
-#   - Secrets injected via Space Settings → Repository Secrets
-#   - Free tier: 16GB RAM CPU, ~2 vCPU
-#
-# Architecture inside this container:
-#   Port 7860 → Streamlit (public-facing UI)
-#   Port 8000 → FastAPI (internal, Streamlit talks to it via localhost)
-#   API_BACKEND_URL=http://localhost:8000 (set in Space secrets)
-#
-# Usage:
-#   1. Create HF Space: huggingface.co/new-space → SDK: Docker
-#   2. Set all secrets in Space Settings → Repository secrets
-#   3. Push this file as Dockerfile to the Space repo
-# ===============================================================
+# ── Stage 1: Dependency builder ───────────────────────────────────────────────
+FROM python:3.11-slim AS builder
 
-FROM python:3.11-slim
+WORKDIR /build
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .
+
+# Install CPU-only PyTorch and all deps
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
+    -r requirements.txt \
+    --target /build/deps
+
+
+# ── Stage 2: Runtime ──────────────────────────────────────────────────────────
+FROM python:3.11-slim AS runtime
+
+# Non-root user for security
+RUN useradd --create-home --shell /bin/bash appuser
 
 WORKDIR /app
 
-# Install Python dependencies
-# CPU-only torch keeps the image lean for HF free tier
-COPY requirements.txt .
-RUN pip install --no-cache-dir \
-    --extra-index-url https://download.pytorch.org/whl/cpu \
-    -r requirements.txt
+# Copy installed deps from builder
+COPY --from=builder /build/deps /usr/local/lib/python3.11/site-packages/
 
-# Copy application code
+# Copy application source
 COPY src/ ./src/
-COPY frontend/ ./frontend/
-COPY scripts/ ./scripts/
 COPY pyproject.toml .
 
-# Create data directory (for BM25 index, parent chunks, semantic cache)
-RUN mkdir -p /app/data
+# Data directory for BM25 index, cache, etc.
+RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
-# HF Spaces runs as root by default — acceptable for free tier
-# (non-root user is in the main Dockerfile for VPS/self-hosted)
+USER appuser
 
-# HF Spaces public port
-EXPOSE 7860
+EXPOSE 8000
 
-# Startup script: run FastAPI on 8000 (background) + Streamlit on 7860 (foreground)
-# API_BACKEND_URL must be set to http://localhost:8000 in Space secrets
-CMD ["sh", "-c", \
-  "uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --workers 1 & \
-   echo 'Waiting for API to be ready...' && \
-   sleep 12 && \
-   streamlit run frontend/app.py \
-     --server.port=7860 \
-     --server.address=0.0.0.0 \
-     --server.headless=true \
-     --server.enableCORS=false \
-     --server.enableXsrfProtection=false"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

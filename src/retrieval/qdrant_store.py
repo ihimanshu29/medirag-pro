@@ -13,9 +13,9 @@ from qdrant_client.models import (
     FieldCondition,
     Filter,
     MatchValue,
+    PayloadSchemaType,
     PointStruct,
     VectorParams,
-    PayloadSchemaType,
 )
 
 from src.config import settings
@@ -65,7 +65,7 @@ class QdrantStore:
     def _ensure_collection(self) -> None:
         """Create the collection if it doesn't already exist and guarantee payload indexing."""
         existing = {c.name for c in self._client.get_collections().collections}
-        
+
         if self._collection not in existing:
             self._client.create_collection(
                 collection_name=self._collection,
@@ -77,7 +77,7 @@ class QdrantStore:
             logger.info("qdrant_collection_created", collection=self._collection, dim=self._dim)
         else:
             logger.info("qdrant_collection_exists", collection=self._collection)
-            
+
         # ─── PRODUCTION FIX: RUNS REGARDLESS OF IF/ELSE CORNER CASES ───
         for field in ("source_file", "section", "chunk_type"):
             try:
@@ -88,7 +88,7 @@ class QdrantStore:
                 )
                 logger.info("qdrant_payload_index_created", field=field)
             except Exception:
-                # If the index already exists, Qdrant raises an exception. 
+                # If the index already exists, Qdrant raises an exception.
                 # We catch and pass it silently so it doesn't disrupt startup.
                 pass
 

@@ -15,7 +15,6 @@ This implementation:
 Schema (created by scripts/init_db.sql):
   chat_sessions(id, session_id UUID, role, content, created_at)
 """
-from datetime import datetime, timezone
 
 import psycopg2
 import psycopg2.extras
@@ -45,8 +44,7 @@ class SessionMemory:
         Ordered oldest → newest (correct order for prompt assembly).
         """
         try:
-            with self._get_conn() as conn:
-                with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            with self._get_conn() as conn, conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                     cur.execute(
                         """
                         SELECT role, content FROM (

@@ -135,7 +135,6 @@ def test_context_precision_calls_judge():
 
 def test_golden_test_set_loads():
     """Test set must be valid JSON with required fields."""
-    import json
     with open("evaluation/golden_test_set.json") as f:
         data = json.load(f)
     assert len(data) >= 50, f"Expected 50+ samples, got {len(data)}"
@@ -149,7 +148,6 @@ def test_golden_test_set_loads():
 
 def test_golden_test_set_categories():
     """Test set must cover diverse medical categories."""
-    import json
     with open("evaluation/golden_test_set.json") as f:
         data = json.load(f)
     categories = {s["category"] for s in data}
@@ -162,8 +160,9 @@ def test_golden_test_set_categories():
 @pytest.fixture
 def client():
     os.environ.setdefault("GROQ_API_KEY", "test-key")
-    from src.api.main import app
     from fastapi.testclient import TestClient
+
+    from src.api.main import app
     return TestClient(app, raise_server_exceptions=False)
 
 

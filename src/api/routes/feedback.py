@@ -4,7 +4,6 @@ Stores thumbs-up / thumbs-down per response to PostgreSQL.
 Feeds the online evaluation loop — daily aggregation drives quality monitoring.
 """
 import psycopg2
-
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 

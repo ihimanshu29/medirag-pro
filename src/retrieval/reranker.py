@@ -107,7 +107,7 @@ class Reranker:
             return float(1.0 / (1.0 + np.exp(-x)))
 
         scored = sorted(
-            zip(raw_scores, candidates),
+            zip(raw_scores, candidates, strict=False),
             key=lambda x: x[0],
             reverse=True,
         )

@@ -14,7 +14,7 @@ Why structured prompt over LangChain chains?
 """
 import time
 
-from groq import Groq, APIStatusError, APITimeoutError
+from groq import APIStatusError, APITimeoutError, Groq
 
 from src.config import settings
 from src.logging_config import get_logger

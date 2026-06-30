@@ -23,7 +23,6 @@ For portfolio scale (< 10K cached queries), this approach is fast enough.
 
 Cache hit metric is tracked and exposed via Prometheus.
 """
-import json
 import time
 from pathlib import Path
 

@@ -18,7 +18,6 @@ from typing import Any
 from src.ingestion.chunker import chunk_pages
 from src.ingestion.loader import load_document
 from src.logging_config import get_logger
-from src.models import ChildChunk
 from src.retrieval.bm25_store import BM25Store
 from src.retrieval.embedder import Embedder
 from src.retrieval.parent_store import ParentStore
@@ -89,7 +88,7 @@ class IngestPipeline:
         texts = [c.text for c in child_chunks]
         embeddings = self._embedder.embed_documents(texts)
 
-        for chunk, emb in zip(child_chunks, embeddings):
+        for chunk, emb in zip(child_chunks, embeddings, strict=False):
             chunk.embedding = emb
 
         logger.info("ingest_embedded", filename=filename, vectors=len(embeddings))

@@ -44,8 +44,8 @@ def load_pdf(file_path: Path) -> list[RawPage]:
     Text comes from pymupdf4llm (markdown-aware).
     Tables come from pdfplumber (structure-aware).
     """
-    import pymupdf4llm
     import pdfplumber
+    import pymupdf4llm
 
     pages: list[RawPage] = []
 

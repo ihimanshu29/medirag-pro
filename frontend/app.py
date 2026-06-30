@@ -10,6 +10,7 @@ Deployment:
   VPS:         API_BACKEND_URL=https://api.yourdomain.com
                or API_BACKEND_URL=http://YOUR_IP:8000
 """
+import contextlib
 import os
 import uuid
 
@@ -70,7 +71,7 @@ def upload_document(file) -> dict:
 
 
 def submit_feedback(query: str, answer: str, rating: int) -> None:
-    try:
+    with contextlib.suppress(Exception):
         requests.post(
             f"{API_BASE}/feedback",
             json={
@@ -81,8 +82,6 @@ def submit_feedback(query: str, answer: str, rating: int) -> None:
             },
             timeout=5,
         )
-    except Exception:
-        pass
 
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -218,72 +217,71 @@ if query := st.chat_input("Ask a medical question..."):
     with st.chat_message("user"):
         st.markdown(query)
 
-    with st.chat_message("assistant"):
-        with st.spinner("Retrieving and generating answer..."):
-            try:
-                response = send_query(
-                    query,
-                    source_filter=source_filter if source_filter else None,
-                )
+    with st.chat_message("assistant"), st.spinner("Retrieving and generating answer..."):
+        try:
+            response = send_query(
+                query,
+                source_filter=source_filter if source_filter else None,
+            )
 
-                answer = response["answer"]
-                sources = response.get("sources", [])
-                confidence = response.get("confidence", 0.0)
-                is_emergency = response.get("is_emergency", False)
-                cache_hit = response.get("cache_hit", False)
-                latency_ms = response.get("latency_ms", 0)
+            answer = response["answer"]
+            sources = response.get("sources", [])
+            confidence = response.get("confidence", 0.0)
+            is_emergency = response.get("is_emergency", False)
+            cache_hit = response.get("cache_hit", False)
+            latency_ms = response.get("latency_ms", 0)
 
-                st.session_state.total_queries += 1
-                if cache_hit:
-                    st.session_state.cache_hits += 1
+            st.session_state.total_queries += 1
+            if cache_hit:
+                st.session_state.cache_hits += 1
 
-                if is_emergency:
-                    st.error(answer)
-                else:
-                    st.markdown(answer)
+            if is_emergency:
+                st.error(answer)
+            else:
+                st.markdown(answer)
 
-                if sources:
-                    with st.expander(
-                        f"📚 Sources ({len(sources)}) — Confidence: {confidence:.0%}",
-                        expanded=confidence < 0.5,
-                    ):
-                        for i, src in enumerate(sources, 1):
-                            st.markdown(
-                                f"**[{i}] {src['source_file']}** "
-                                f"{'— p.' + str(src['page']) if src.get('page') else ''} "
-                                f"{'— ' + src['section'] if src.get('section') else ''} "
-                                f"*(score: {src['score']:.3f})*"
-                            )
-                            st.markdown(
-                                f"> {src['content'][:300]}"
-                                f"{'...' if len(src['content']) > 300 else ''}"
-                            )
-                            if i < len(sources):
-                                st.divider()
+            if sources:
+                with st.expander(
+                    f"📚 Sources ({len(sources)}) — Confidence: {confidence:.0%}",
+                    expanded=confidence < 0.5,
+                ):
+                    for i, src in enumerate(sources, 1):
+                        st.markdown(
+                            f"**[{i}] {src['source_file']}** "
+                            f"{'— p.' + str(src['page']) if src.get('page') else ''} "
+                            f"{'— ' + src['section'] if src.get('section') else ''} "
+                            f"*(score: {src['score']:.3f})*"
+                        )
+                        st.markdown(
+                            f"> {src['content'][:300]}"
+                            f"{'...' if len(src['content']) > 300 else ''}"
+                        )
+                        if i < len(sources):
+                            st.divider()
 
-                badges = []
-                if cache_hit:
-                    badges.append("⚡ Cached")
-                if is_emergency:
-                    badges.append("🚨 Emergency")
-                badges.append(f"⏱ {latency_ms:.0f}ms")
-                st.caption(" · ".join(badges))
+            badges = []
+            if cache_hit:
+                badges.append("⚡ Cached")
+            if is_emergency:
+                badges.append("🚨 Emergency")
+            badges.append(f"⏱ {latency_ms:.0f}ms")
+            st.caption(" · ".join(badges))
 
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": answer,
-                    "sources": sources,
-                    "confidence": confidence,
-                    "is_emergency": is_emergency,
-                    "cache_hit": cache_hit,
-                    "latency_ms": latency_ms,
-                    "query": query,
-                })
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": answer,
+                "sources": sources,
+                "confidence": confidence,
+                "is_emergency": is_emergency,
+                "cache_hit": cache_hit,
+                "latency_ms": latency_ms,
+                "query": query,
+            })
 
-            except requests.exceptions.ConnectionError:
-                st.error(
-                    f"❌ Cannot connect to the API at `{_API_BACKEND_URL}`.\n\n"
-                    "Set `API_BACKEND_URL` environment variable to the correct backend URL."
-                )
-            except Exception as e:
-                st.error(f"❌ Error: {e}")
+        except requests.exceptions.ConnectionError:
+            st.error(
+                f"❌ Cannot connect to the API at `{_API_BACKEND_URL}`.\n\n"
+                "Set `API_BACKEND_URL` environment variable to the correct backend URL."
+            )
+        except Exception as e:
+            st.error(f"❌ Error: {e}")

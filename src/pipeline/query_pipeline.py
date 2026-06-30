@@ -23,6 +23,7 @@ from typing import Any
 
 from src.api.schemas import SourceDocument
 from src.cache.semantic_cache import SemanticCache
+from src.config import settings
 from src.generation.llm import generate_answer
 from src.guardrails.emergency import check_emergency
 from src.guardrails.safety import sanitize_query
@@ -35,7 +36,6 @@ from src.retrieval.hybrid import reciprocal_rank_fusion
 from src.retrieval.parent_store import ParentStore
 from src.retrieval.qdrant_store import QdrantStore
 from src.retrieval.reranker import Reranker
-from src.config import settings
 
 logger = get_logger(__name__)
 
