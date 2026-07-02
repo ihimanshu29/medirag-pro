@@ -8,6 +8,7 @@ Usage:
 """
 import logging
 import sys
+from typing import Any
 
 import structlog
 
@@ -25,7 +26,7 @@ def setup_logging() -> None:
     ]
 
     if settings.is_production:
-        renderer = structlog.processors.JSONRenderer()
+        renderer:Any = structlog.processors.JSONRenderer()
     else:
         renderer = structlog.dev.ConsoleRenderer(colors=True)
 

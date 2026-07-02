@@ -24,20 +24,20 @@ class Settings(BaseSettings):
     )
 
     # ── LLM ──────────────────────────────────────────────────────
-    groq_api_key: str = Field(..., description="Groq API key")
-    groq_model_name: str = Field("llama-3.3-70b-versatile")
-    llm_temperature: float = Field(0.0)
-    llm_max_tokens: int = Field(1024)
+    groq_api_key: str | None = Field(default=None, description="Groq API key")
+    groq_model_name: str = Field(default="llama-3.3-70b-versatile")
+    llm_temperature: float = Field(default=0.0)
+    llm_max_tokens: int = Field(default=1024)
 
     # ── Observability ─────────────────────────────────────────────
-    langchain_api_key: str = Field(default="", description="LangSmith API key")
+    langchain_api_key: str | None = Field(default=None, description="LangSmith API key")
     langchain_tracing_v2: bool = Field(default=False)
     langchain_project: str = Field(default="medirag-pro")
 
     # ── Vector Store ──────────────────────────────────────────────
     # Free cloud: set QDRANT_URL + QDRANT_API_KEY (Qdrant Cloud)
     # Local/VPS:  set QDRANT_HOST + QDRANT_PORT (self-hosted Docker)
-    qdrant_url: str = Field(default="", description="Qdrant Cloud URL (overrides host+port)")
+    qdrant_url: str | None = Field(default="None", description="Qdrant Cloud URL (overrides host+port)")
     qdrant_api_key: str = Field(default="", description="Qdrant Cloud API key")
     qdrant_host: str = Field(default="localhost")
     qdrant_port: int = Field(default=6333)
@@ -46,8 +46,8 @@ class Settings(BaseSettings):
     # ── Database ──────────────────────────────────────────────────
     # Free cloud: set DATABASE_URL directly (Neon gives a full connection string)
     # Local/VPS:  set individual POSTGRES_* vars (assembled into database_url)
-    database_url_override: str = Field(
-        default="",
+    database_url_override: str | None = Field(
+        default=None,
         alias="DATABASE_URL",
         description="Full database URL — overrides individual POSTGRES_* vars. Use for Neon/Supabase.",
     )
@@ -125,7 +125,7 @@ class Settings(BaseSettings):
     def uses_qdrant_cloud(self) -> bool:
         """True when QDRANT_URL is set — means we're using Qdrant Cloud."""
         return bool(self.qdrant_url)
-
+    
     @computed_field
     @property
     def is_production(self) -> bool:

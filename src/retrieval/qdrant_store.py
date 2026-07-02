@@ -157,19 +157,25 @@ class QdrantStore:
             with_payload=True,
         )
 
-        return [
-            RetrievedChunk(
-                chunk_id=r.payload["chunk_id"],
-                parent_id=r.payload["parent_id"],
-                text=r.payload["text"],
-                source_file=r.payload["source_file"],
-                page=r.payload["page"],
-                section=r.payload.get("section", ""),
-                score=r.score,
-                retrieval_method="dense",
+        retrieved_chunks: list[RetrievedChunk] = []
+        for r in results:
+            payload = r.payload
+            assert payload is not None  # Proves to mypy this is a dict, not None
+            
+            retrieved_chunks.append(
+                RetrievedChunk(
+                    chunk_id=payload["chunk_id"],
+                    parent_id=payload["parent_id"],
+                    text=payload["text"],
+                    source_file=payload["source_file"],
+                    page=payload["page"],
+                    section=payload.get("section", ""),
+                    score=r.score,
+                    retrieval_method="dense",
+                )
             )
-            for r in results
-        ]
+            
+        return retrieved_chunks
 
     def delete_by_source(self, source_file: str) -> None:
         """Remove all chunks for a given source file (enables re-ingestion)."""

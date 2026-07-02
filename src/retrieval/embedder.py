@@ -29,6 +29,7 @@ class Embedder:
     Thread-safe singleton BGE embedding model.
     One instance per process, shared across requests.
     """
+    _initialized: bool
 
     _instance: ClassVar["Embedder | None"] = None
     _lock: ClassVar[threading.Lock] = threading.Lock()
@@ -43,7 +44,7 @@ class Embedder:
         return cls._instance
 
     def __init__(self) -> None:
-        if self._initialized:  # type: ignore[has-type]
+        if self._initialized: 
             return
         self._model_name = settings.embedding_model
         self._model: SentenceTransformer | None = None
@@ -79,8 +80,8 @@ class Embedder:
             show_progress_bar=len(texts) > 100,
             convert_to_numpy=True,
         )
-        return embeddings.tolist()  # type: ignore[union-attr]
-
+        return embeddings.tolist()
+    
     def embed_query(self, query: str) -> list[float]:
         """
         Embed a single query with BGE prefix.
@@ -93,7 +94,7 @@ class Embedder:
             normalize_embeddings=True,
             convert_to_numpy=True,
         )
-        return embedding.tolist()  # type: ignore[union-attr]
+        return embedding.tolist() 
 
     def cosine_similarity(self, vec_a: list[float], vec_b: list[float]) -> float:
         """Cosine similarity between two normalized vectors (dot product suffices)."""

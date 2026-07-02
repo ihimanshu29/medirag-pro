@@ -12,6 +12,8 @@ Why two PDF libraries?
 """
 from pathlib import Path
 
+from docx import Document
+
 from src.logging_config import get_logger
 from src.models import RawPage
 
@@ -113,7 +115,6 @@ def load_docx(file_path: Path) -> list[RawPage]:
     Load a DOCX file. Each paragraph section becomes a RawPage.
     DOCX doesn't have real "pages" so we group by heading sections.
     """
-    from docx import Document  # type: ignore
 
     doc = Document(str(file_path))
     pages: list[RawPage] = []
@@ -134,7 +135,7 @@ def load_docx(file_path: Path) -> list[RawPage]:
         current_lines.clear()
 
     for para in doc.paragraphs:
-        if para.style.name.startswith("Heading"):
+        if para.style is not None and para.style.name.startswith("Heading"):
             flush()
             current_section = para.text.strip()
             current_lines.append(f"# {current_section}")

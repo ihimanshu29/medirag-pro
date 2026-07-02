@@ -24,6 +24,8 @@ Model: BAAI/bge-reranker-base (278M params, runs comfortably on CPU)
 import threading
 from typing import ClassVar
 
+from sentence_transformers import CrossEncoder
+
 from src.config import settings
 from src.logging_config import get_logger
 from src.models import RetrievedChunk
@@ -36,6 +38,7 @@ class Reranker:
     Thread-safe singleton cross-encoder reranker.
     Loads model once, reuses across requests.
     """
+    _initialized: bool
 
     _instance: ClassVar["Reranker | None"] = None
     _lock: ClassVar[threading.Lock] = threading.Lock()
@@ -50,16 +53,15 @@ class Reranker:
         return cls._instance
 
     def __init__(self) -> None:
-        if self._initialized:  # type: ignore[has-type]
+        if self._initialized: 
             return
         self._model_name = settings.reranker_model
-        self._model = None
+        self._model: CrossEncoder | None = None
         self._initialized = True
         logger.info("reranker_singleton_created", model=self._model_name)
 
-    def _get_model(self):
+    def _get_model(self) -> CrossEncoder:
         if self._model is None:
-            from sentence_transformers import CrossEncoder
             logger.info("reranker_loading", model=self._model_name)
             self._model = CrossEncoder(
                 self._model_name,

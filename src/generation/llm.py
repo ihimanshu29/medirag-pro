@@ -109,11 +109,16 @@ def generate_answer(
             answer = response.choices[0].message.content or ""
             answer = answer.strip() + MEDICAL_DISCLAIMER
 
+            # ─── SAFE TYPE NARROWING FOR MYPY ───
+            usage = response.usage
+            p_tokens = usage.prompt_tokens if usage else 0
+            c_tokens = usage.completion_tokens if usage else 0
+
             logger.info(
                 "llm_response",
                 model=settings.groq_model_name,
-                prompt_tokens=response.usage.prompt_tokens,
-                completion_tokens=response.usage.completion_tokens,
+                prompt_tokens=p_tokens,
+                completion_tokens=c_tokens,
                 confidence=round(confidence, 3),
                 attempt=attempt + 1,
             )

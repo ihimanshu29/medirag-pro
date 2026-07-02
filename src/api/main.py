@@ -9,6 +9,7 @@ FastAPI application entry point.
 import time
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from typing import Awaitable, Callable
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -104,7 +105,7 @@ def create_app() -> FastAPI:
 
     # Rate limiting
     app.state.limiter = limiter
-    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler) # type: ignore[arg-type]
 
     # CORS — driven entirely by CORS_ORIGINS env var
     # Local/Free: "*"   VPS: "https://yourdomain.com"
@@ -128,7 +129,7 @@ def create_app() -> FastAPI:
 
     # Request logging + metrics middleware
     @app.middleware("http")
-    async def observability_middleware(request: Request, call_next) -> Response:
+    async def observability_middleware(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
         t0 = time.perf_counter()
         response = await call_next(request)
         latency = time.perf_counter() - t0

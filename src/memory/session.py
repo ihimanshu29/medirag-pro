@@ -34,7 +34,7 @@ class SessionMemory:
         self._session_id = session_id
         self._conn_str = settings.database_url
 
-    def _get_conn(self):
+    def _get_conn(self) -> psycopg2.extensions.connection:
         """Get a fresh connection. Short-lived — we don't pool at this layer."""
         return psycopg2.connect(self._conn_str, connect_timeout=3)
 
