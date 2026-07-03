@@ -39,8 +39,11 @@ def _check_qdrant() -> dict:
             "collections": len(collections.collections),
             "mode": "cloud" if settings.uses_qdrant_cloud else "local",
         }
-    except Exception as e:
-        return {"status": ComponentStatus.DOWN, "error": str(e)}
+    # except Exception as e:
+    #     return {"status": ComponentStatus.DOWN, "error": str(e)}
+    except Exception:
+        logger.exception("qdrant_health_failed")
+        raise
 
 
 def _check_postgres() -> dict:

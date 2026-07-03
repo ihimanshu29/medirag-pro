@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     # ── Vector Store ──────────────────────────────────────────────
     # Free cloud: set QDRANT_URL + QDRANT_API_KEY (Qdrant Cloud)
     # Local/VPS:  set QDRANT_HOST + QDRANT_PORT (self-hosted Docker)
-    qdrant_url: str | None = Field(default="None", description="Qdrant Cloud URL (overrides host+port)")
+    qdrant_url: str | None = Field(default=None, description="Qdrant Cloud URL (overrides host+port)")
     qdrant_api_key: str = Field(default="", description="Qdrant Cloud API key")
     qdrant_host: str = Field(default="localhost")
     qdrant_port: int = Field(default=6333)

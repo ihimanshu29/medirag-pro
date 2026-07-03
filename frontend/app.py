@@ -5,12 +5,13 @@ Talks to the FastAPI backend via HTTP (not importing pipeline directly).
 Backend URL is discovered from environment variable API_BACKEND_URL.
 
 Deployment:
-  Local:       API_BACKEND_URL=http://localhost:8000  (default)
-  Free cloud:  API_BACKEND_URL=https://your-hf-space.hf.space
-  VPS:         API_BACKEND_URL=https://api.yourdomain.com
-               or API_BACKEND_URL=http://YOUR_IP:8000
+  Local:      API_BACKEND_URL=http://localhost:8000  (default)
+  Free cloud: API_BACKEND_URL=https://your-hf-space.hf.space
+  VPS:        API_BACKEND_URL=https://api.yourdomain.com
+              or API_BACKEND_URL=http://YOUR_IP:8000
 """
 import contextlib
+import mimetypes
 import os
 import uuid
 
@@ -61,10 +62,23 @@ def send_query(query: str, source_filter: str | None = None) -> dict:
 
 
 def upload_document(file) -> dict:
+    # Safe Fallback: Extract the exact browser mime-type or guess cleanly from file extension
+    detected_type = (
+        file.type 
+        or mimetypes.guess_type(file.name)[0] 
+        or "application/octet-stream"
+    )
+    
+    # Ensure memory safety by streaming the file pointer from the initial byte 
+    file.seek(0)
+    
+    # Extended Compute Window: 5s connection check time, 600s (10 min) deep RAG pipeline execution limit
+    extended_timeout = (5, 600)
+    
     r = requests.post(
         f"{API_BASE}/ingest",
-        files={"file": (file.name, file.getvalue(), "application/pdf")},
-        timeout=120,
+        files={"file": (file.name, file, detected_type)},
+        timeout=extended_timeout,
     )
     r.raise_for_status()
     return r.json()
@@ -129,10 +143,11 @@ with st.sidebar:
 
     # Document upload
     st.markdown("**📄 Ingest Document**")
+    # Multi-format configuration aligned explicitly with backend filters
     uploaded_file = st.file_uploader(
-        "Upload PDF",
-        type=["pdf"],
-        help="Upload a medical PDF to add to the knowledge base",
+        "Upload Document",
+        type=["pdf", "docx"],
+        help="Upload a medical PDF or DOCX to add to the knowledge base",
     )
     if uploaded_file and st.button("Ingest Document", use_container_width=True):
         with st.spinner(f"Processing {uploaded_file.name}..."):
@@ -151,7 +166,7 @@ with st.sidebar:
     st.markdown("**🔍 Filter by Source**")
     source_filter = st.text_input(
         "Filename (optional)",
-        placeholder="e.g. medical_textbook.pdf",
+        placeholder="e.g. medical_textbook.pdf or reference.docx",
         help="Restrict retrieval to a specific document",
     )
 
@@ -166,8 +181,8 @@ with st.sidebar:
 st.title("MediRAG Pro 🩺")
 st.caption("Ask medical questions grounded in your knowledge base documents.")
 
-# Render chat history
-for msg in st.session_state.messages:
+# Render chat history cleanly via dynamic enumeration to circumvent duplicate key conflicts
+for msg_idx, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
@@ -200,7 +215,6 @@ for msg in st.session_state.messages:
                 st.caption(" · ".join(badges))
 
             col1, col2, col3 = st.columns([1, 1, 8])
-            msg_idx = st.session_state.messages.index(msg)
             with col1:
                 if st.button("👍", key=f"up_{msg_idx}"):
                     submit_feedback(msg.get("query", ""), msg["content"], rating=1)
