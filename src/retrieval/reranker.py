@@ -53,7 +53,7 @@ class Reranker:
         return cls._instance
 
     def __init__(self) -> None:
-        if self._initialized:
+        if self._initialized: 
             return
         self._model_name = settings.reranker_model
         self._model: CrossEncoder | None = None

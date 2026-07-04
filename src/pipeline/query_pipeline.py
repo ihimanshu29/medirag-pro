@@ -64,7 +64,7 @@ def _get_components() -> tuple[Embedder, QdrantStore, BM25Store, ParentStore, Re
     assert _bm25 is not None
     assert _parent_store is not None
     assert _reranker is not None
-    assert _cache is not None
+    assert _cache is not None    
     return _embedder, _qdrant, _bm25, _parent_store, _reranker, _cache
 
 
