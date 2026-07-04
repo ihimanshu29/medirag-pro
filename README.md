@@ -13,7 +13,7 @@
 
 ## Live Demo
 
-🔗 **https://YOUR_HF_USERNAME-medirag-pro.hf.space** — deployed free on HuggingFace Spaces, backed by Qdrant Cloud + Neon PostgreSQL + Groq.
+🔗 **https://huggingface.co/spaces/nightKing29/medirag-pro** — deployed free on HuggingFace Spaces, backed by Qdrant Cloud + Neon PostgreSQL + Groq.
 
 ---
 
