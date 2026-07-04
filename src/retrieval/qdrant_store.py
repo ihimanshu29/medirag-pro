@@ -161,7 +161,7 @@ class QdrantStore:
         for r in results:
             payload = r.payload
             assert payload is not None  # Proves to mypy this is a dict, not None
-            
+
             retrieved_chunks.append(
                 RetrievedChunk(
                     chunk_id=payload["chunk_id"],
@@ -174,7 +174,7 @@ class QdrantStore:
                     retrieval_method="dense",
                 )
             )
-            
+
         return retrieved_chunks
 
     def delete_by_source(self, source_file: str) -> None:

@@ -125,7 +125,7 @@ class Settings(BaseSettings):
     def uses_qdrant_cloud(self) -> bool:
         """True when QDRANT_URL is set — means we're using Qdrant Cloud."""
         return bool(self.qdrant_url)
-    
+
     @computed_field
     @property
     def is_production(self) -> bool:

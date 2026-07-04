@@ -44,7 +44,7 @@ class Embedder:
         return cls._instance
 
     def __init__(self) -> None:
-        if self._initialized: 
+        if self._initialized:
             return
         self._model_name = settings.embedding_model
         self._model: SentenceTransformer | None = None
@@ -81,7 +81,7 @@ class Embedder:
             convert_to_numpy=True,
         )
         return embeddings.tolist()
-    
+
     def embed_query(self, query: str) -> list[float]:
         """
         Embed a single query with BGE prefix.
@@ -94,7 +94,7 @@ class Embedder:
             normalize_embeddings=True,
             convert_to_numpy=True,
         )
-        return embedding.tolist() 
+        return embedding.tolist()
 
     def cosine_similarity(self, vec_a: list[float], vec_b: list[float]) -> float:
         """Cosine similarity between two normalized vectors (dot product suffices)."""
