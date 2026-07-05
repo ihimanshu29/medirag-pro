@@ -80,6 +80,9 @@ User Query
     │  + disclaimer + latency_ms      │
     └─────────────────────────────────┘
 ```
+## ⬇️ *CLICK THE IMAGE BELOW* ⬇️
+## 🏗️ LIVE INTERACTIVE ARCHITECTURE EXPLORER
+[![MediRAG Architecture](https://github.com/user-attachments/assets/25abff66-9282-49cc-8407-1d905aa283be)](https://medirag-architecture.vercel.app)
 
 ---
 
